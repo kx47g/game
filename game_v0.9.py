@@ -19,6 +19,8 @@ SCREEN_CENTER_X = SCREEN_RECT.width//2//CS
 SCREEN_CENTER_Y = SCREEN_RECT.height//2//CS
 T1,T2=1,95
 potion = 1
+smallLv = 100
+bigLv = smallLv + 100
 
 
 def load_sound(filename):
@@ -64,6 +66,14 @@ class playerstatas:
     QUI = 0
     LUK = 0
     money = 100
+    up_1 = 0
+    up_2 = 0
+    up_3 = 0
+    up_4 = 0
+    up_5 = 0
+    exp = 0
+    Lv =0
+    race=0
 class humanstatas:
     MAXHP = 20
     MAXMP = 10
@@ -77,6 +87,14 @@ class humanstatas:
     QUI = 10
     LUK = 10
     money = 100
+    up_1 = 20
+    up_2 = 45
+    up_3 = 3
+    up_4 = 2
+    up_5 = 0
+    exp = 0
+    Lv =1
+    race=1
 class elfstatas:
     MAXHP = 15
     MAXMP = 15
@@ -90,6 +108,14 @@ class elfstatas:
     QUI = 10
     LUK = 10
     money = 100
+    up_1 = 20
+    up_2 = 45
+    up_3 = 2
+    up_4 = 1
+    up_5 = 0
+    exp = 0
+    Lv =1
+    race=2
 class dowarfstatas:
     MAXHP = 25
     MAXMP = 5
@@ -103,6 +129,14 @@ class dowarfstatas:
     QUI = 5
     LUK = 5
     money = 100
+    up_1 = 20
+    up_2 = 45
+    up_3 = 3
+    up_4 = 2
+    up_5 = 1
+    exp = 0
+    Lv =1
+    race=3
 class beastmanstatas:
     MAXHP = 20
     MAXMP = 10
@@ -116,6 +150,14 @@ class beastmanstatas:
     QUI = 20
     LUK = 10
     money = 100
+    up_1 = 20
+    up_2 = 45
+    up_3 = 3
+    up_4 = 2
+    up_5 = 1
+    exp = 0
+    Lv =1
+    race=4
 class plantmanstatas:
     MAXHP = 30
     MAXMP = 20
@@ -129,6 +171,14 @@ class plantmanstatas:
     QUI = 5
     LUK = 5
     money = 100
+    up_1 = 20
+    up_2 = 50
+    up_3 = 4
+    up_4 = 2
+    up_5 = 1
+    exp = 0
+    Lv =1
+    race=5
 class dragonoidstatas:
     MAXHP = 20
     MAXMP = 10
@@ -142,6 +192,14 @@ class dragonoidstatas:
     QUI = 5
     LUK = 5
     money = 100
+    up_1 = 20
+    up_2 = 45
+    up_3 = 2
+    up_4 = 0
+    up_5 = 0
+    exp = 0
+    Lv =1
+    race=6
 class wedystatas:
     MAXHP = 15
     MAXMP = 10
@@ -155,6 +213,14 @@ class wedystatas:
     QUI = 15
     LUK = 5
     money = 100
+    up_1 = 20
+    up_2 = 45
+    up_3 = 3
+    up_4 = 2
+    up_5 = 1
+    exp = 0
+    Lv =1
+    race=0
 
 
 class slime:
@@ -170,6 +236,7 @@ class slime:
     NAME = "スライム"
     IMAGE=load_image("slime.png")
     money = 20
+    gain_exp = 20
 
 class wolf:
     HP = 20
@@ -184,6 +251,7 @@ class wolf:
     NAME = "ウルフ"
     IMAGE=load_image("wolf.png")
     money = 50
+    gain_exp = 40
 
 class dragon:
     HP = 300
@@ -198,6 +266,7 @@ class dragon:
     NAME = "タウンドラゴン"
     IMAGE=load_image("dragon.png")
     money = 9999
+    gain_exp = 120
 
 def member():
     while True:
@@ -541,7 +610,8 @@ def gameover():
     break
     
 def battle():
-    global monsterstatas,X,Y,potion,playerstatas
+    global monsterstatas,X,Y,potion,playerstatas,smallLv,bigLv
+    GAIN_EXP = str(monsterstatas.gain_exp)
     battle_image = load_image("charamake.png")
     rect_battleimg=battle_image.get_rect()
     screen.blit(battle_image,rect_battleimg)
@@ -606,6 +676,32 @@ def battle():
                         screen.blit(text,[25,370])
                         pygame.display.update()
                         time.sleep(1.2)
+                        STR,RES,TEC,QUI,LUKp,LUKm=monsterstatas.STR,playerstatas.RES,monsterstatas.TEC,playerstatas.QUI,monsterstatas.LUK,playerstatas.LUK
+                        pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                        pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                        text8 = font.render(monstername,True,(255,255,255))
+                        screen.blit(text8,[25,370])
+                        text9 = font.render("の攻撃！",True,(255,255,255))
+                        screen.blit(text9,[225,370])
+                        pygame.display.update()
+                        time.sleep(1)
+                    
+                        ATK = STR
+                        DEF = RES
+                        AVO = QUI+LUKm/100
+                        HIT = (100-AVO)+TEC+LUKp/100
+                        DMG = ATK-DEF//5
+                        playerstatas.HP-=DMG
+                        pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                        pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                        damage=str(DMG)
+                        text10 = font.render("あなたに　　のダメージを与えた!",True,(255,255,255))
+                        screen.blit(text10,[25,370])
+                        text11 = font.render(damage,True,(255,255,255))
+                        screen.blit(text11,[145,370])
+                        playerHP=str(playerstatas.HP)
+                        pygame.display.update()
+                        time.sleep(1)
                     if  escape > 1 and escape <= 1.5:
                         escape2 = randint(1,2)
                         if escape2 == 1:
@@ -615,7 +711,39 @@ def battle():
                             screen.blit(text,[25,370])
                             pygame.display.update()
                             time.sleep(1.2)
+                            STR,RES,TEC,QUI,LUKp,LUKm=monsterstatas.STR,playerstatas.RES,monsterstatas.TEC,playerstatas.QUI,monsterstatas.LUK,playerstatas.LUK
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            text8 = font.render(monstername,True,(255,255,255))
+                            screen.blit(text8,[25,370])
+                            text9 = font.render("の攻撃！",True,(255,255,255))
+                            screen.blit(text9,[225,370])
+                            pygame.display.update()
+                            time.sleep(1)
+                    
+                            ATK = STR
+                            DEF = RES
+                            AVO = QUI+LUKm/100
+                            HIT = (100-AVO)+TEC+LUKp/100
+                            DMG = ATK-DEF//5
+                            playerstatas.HP-=DMG
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            damage=str(DMG)
+                            text10 = font.render("あなたに　　のダメージを与えた!",True,(255,255,255))
+                            screen.blit(text10,[25,370])
+                            text11 = font.render(damage,True,(255,255,255))
+                            screen.blit(text11,[145,370])
+                            playerHP=str(playerstatas.HP)
+                            pygame.display.update()
+                            time.sleep(1)
                         else:
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            text = font.render("逃げられなかった！",True,(255,255,255))
+                            screen.blit(text,[25,370])
+                            pygame.display.update()
+                            time.sleep(1.2)
                             return playerstatas
                     if escape > 1.5 and escape <= 2:
                         escape2 = randint(1,4)
@@ -626,10 +754,48 @@ def battle():
                             screen.blit(text,[25,370])
                             pygame.display.update()
                             time.sleep(1.2)
+                            STR,RES,TEC,QUI,LUKp,LUKm=monsterstatas.STR,playerstatas.RES,monsterstatas.TEC,playerstatas.QUI,monsterstatas.LUK,playerstatas.LUK
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            text8 = font.render(monstername,True,(255,255,255))
+                            screen.blit(text8,[25,370])
+                            text9 = font.render("の攻撃！",True,(255,255,255))
+                            screen.blit(text9,[225,370])
+                            pygame.display.update()
+                            time.sleep(1)
+                    
+                            ATK = STR
+                            DEF = RES
+                            AVO = QUI+LUKm/100
+                            HIT = (100-AVO)+TEC+LUKp/100
+                            DMG = ATK-DEF//5
+                            playerstatas.HP-=DMG
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            damage=str(DMG)
+                            text10 = font.render("あなたに　　のダメージを与えた!",True,(255,255,255))
+                            screen.blit(text10,[25,370])
+                            text11 = font.render(damage,True,(255,255,255))
+                            screen.blit(text11,[145,370])
+                            playerHP=str(playerstatas.HP)
+                            pygame.display.update()
+                            time.sleep(1)
                         else:
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            text = font.render("逃げきれた！",True,(255,255,255))
+                            screen.blit(text,[25,370])
+                            pygame.display.update()
+                            time.sleep(1.2)
                             return playerstatas
                     if escape > 2:
-                        return playerstatas
+                            pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                            pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
+                            text = font.render("逃げきれた！",True,(255,255,255))
+                            screen.blit(text,[25,370])
+                            pygame.display.update()
+                            time.sleep(1.2)
+                            return playerstatas
                 if event.key == K_1:
 
                     pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
@@ -659,6 +825,7 @@ def battle():
                     screen.blit(text6,[225,370])
                     text7 = font.render(damage,True,(255,255,255))
                     screen.blit(text7,[265,370])
+                    playerHP=str(playerstatas.HP)
                     pygame.display.update()
                     time.sleep(1)
                     
@@ -676,11 +843,138 @@ def battle():
                         screen.blit(text3,[25,370])
                         text6 = font.render("を倒した!",True,(255,255,255))
                         screen.blit(text6,[225,370])
+                        text8 = font.render(GAIN_EXP,True,(255,255,255))
+                        screen.blit(text8,[25,430])
+                        text9 = font.render("の経験値を獲得した！",True,(255,255,255))
+                        screen.blit(text9,[70,430])
+                        playerstatas.exp += monsterstatas.gain_exp
+                        if playerstatas.exp > smallLv and playerstatas.exp <= bigLv:
+                            if playerstatas.race == 1:
+                                #ヒューマン
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+
+                            if playerstatas.race == 2:
+                                #エルフ
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+
+                            if playerstatas.race == 3:
+                                #ドワーフ
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+
+                            if playerstatas.race == 4:
+                                #獣人
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+
+                            if playerstatas.race == 5:
+                                #植物人
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+
+                            if playerstatas.race == 6:
+                                #竜人
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+
+                            if playerstatas.race == 7:
+                                #ウェディ
+                                playerstatas.Lv += 1
+                                playerstatas.MAXHP = 
+                                playerstatas.MAXMP = 
+                                playerstatas.HP = 
+                                playerstatas.MP = 
+                                playerstatas.RES = 
+                                playerstatas.STR = 
+                                playerstatas.MGC = 
+                                playerstatas.INT = 
+                                playerstatas.TEC = 
+                                playerstatas.QUI = 
+                                playerstatas.LUK = 
+                                bigLv += 100
+                                smallLv += 100
+                                
+                        pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
+                        pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
                         text7 = font.render(MONEY,True,(255,255,255))
-                        screen.blit(text7,[25,430])
-                        text8 = font.render("G相当の金品を獲得した",True,(255,255,255))
-                        screen.blit(text8,[120,430])
-                        pygame.display.update()
+                        screen.blit(text7,[70,370])
+                        text10 = font.render("G相当の金品を獲得した",True,(255,255,255))
+                        screen.blit(text10,[110,370])
+                        pygame.display.update()                      
                         Sound = "sound_win.mp3"
                         load_sound(Sound)
                         pygame.mixer.music.play(1)
@@ -712,6 +1006,7 @@ def battle():
                     screen.blit(text10,[25,370])
                     text11 = font.render(damage,True,(255,255,255))
                     screen.blit(text11,[145,370])
+                    playerHP=str(playerstatas.HP)
                     pygame.display.update()
                     time.sleep(1)
 
@@ -736,32 +1031,6 @@ def battle():
                             playerstatas.HP = playerstatas.MAXHP
 
                         
-
-                        STR,RES,TEC,QUI,LUKp,LUKm=monsterstatas.STR,playerstatas.RES,monsterstatas.TEC,playerstatas.QUI,monsterstatas.LUK,playerstatas.LUK
-                        pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
-                        pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
-                        text8 = font.render(monstername,True,(255,255,255))
-                        screen.blit(text8,[25,370])
-                        text9 = font.render("の攻撃！",True,(255,255,255))
-                        screen.blit(text9,[225,370])
-                        pygame.display.update()
-                        time.sleep(1)
-                    
-                        ATK = STR
-                        DEF = RES
-                        AVO = QUI+LUKm/100
-                        HIT = (100-AVO)+TEC+LUKp/100
-                        DMG = ATK-DEF//5
-                        playerstatas.HP-=DMG
-                        pygame.draw.rect(screen, (0,0,0), (20,360,480,110))
-                        pygame.draw.rect(screen, (0,0,0), (500,360,130,110))
-                        damage=str(DMG)
-                        text10 = font.render("あなたに　　のダメージを与えた!",True,(255,255,255))
-                        screen.blit(text10,[25,370])
-                        text11 = font.render(damage,True,(255,255,255))
-                        screen.blit(text11,[145,370])
-                        pygame.display.update()
-                        time.sleep(1)
 
 def shop_w():
     global W,playerstatas
@@ -1106,10 +1375,12 @@ def menu():
             plluk = str(playerstatas.LUK)
             MONEY = str(playerstatas.money)
             POTION = str(potion)
+            PLEXP = str(playerstatas.exp)
+            LEVEL = str(playerstatas.Lv)
             pygame.draw.rect(screen, (0,0,0), (70,140,560,320))
             text3=font.render('最大HP　HP　最大MP　MP　耐性　筋力',True,(255,255,255))
             screen.blit(text3,[75,150])
-            text4=font.render('魔力　知力　技巧　速さ　幸運',True,(255,255,255))
+            text4=font.render('魔力　知力　技巧　速さ　幸運  経験値',True,(255,255,255))
             screen.blit(text4,[75,250])
             text5=font.render(plmaxhp,True,(255,255,255))
             screen.blit(text5,[105,200])
@@ -1143,6 +1414,12 @@ def menu():
             screen.blit(text18,[340,360])
             text19 = font.render(POTION,True,(255,255,255))
             screen.blit(text19,[440,360])
+            text20 = font.render(PLEXP,True,(255,255,255))
+            screen.blit(text20,[560,300])
+            text21 = font.render("Lv.",True,(255,255,255))
+            screen.blit(text21,[500,360])
+            text22 = font.render(LEVEL,True,(255,255,255))
+            screen.blit(text22,[560,360])
             pygame.display.update()
             for event in pygame.event.get():
               if event.type == QUIT:          
@@ -1359,6 +1636,10 @@ def main():
                 time.sleep(0.12)
         if pressed_key[K_x]:
             menu()
+        if pressed_key[K_m]:
+            B=5
+            time.sleep(0.2)
+            B=100
 
         for event in pygame.event.get():
             if event.type == QUIT:
